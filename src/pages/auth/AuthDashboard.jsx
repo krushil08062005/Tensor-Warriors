@@ -40,7 +40,14 @@ export default function AuthDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notifications, setNotifications] = useState([]);
-
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNotifications((prev) =>
+        prev.filter((note) => Date.now() - note.id < 15000)
+      );
+    }, 50000000);
+    return () => clearInterval(interval);
+  }, []);
   useEffect(() => {
     if (!isLoggedIn) return;
 
@@ -110,6 +117,24 @@ export default function AuthDashboard() {
     };
 
     fetchData();
+    const reportsAlertsSubscription = supabase
+      .channel("reports_alerts")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "reports",
+        },
+        (payload) => {
+          const newReport = payload.new;
+          const alertMessage = `New case reported: ${
+            newReport.report_id
+          } - ${new Date(newReport.reported_at).toLocaleString()}`;
+          setNotifications((prev) => [alertMessage, ...prev.slice(0, 4)]);
+        }
+      )
+      .subscribe();
 
     // Set up realtime subscription
     const reportsSubscription = supabase
@@ -149,6 +174,7 @@ export default function AuthDashboard() {
     return () => {
       supabase.removeChannel(reportsSubscription);
       supabase.removeChannel(notificationsSubscription);
+      supabase.removeChannel(reportsAlertsSubscription);
     };
   }, [isLoggedIn, user?.id]);
 
@@ -444,54 +470,6 @@ export default function AuthDashboard() {
             </div>
             <AuthCrimeCharts />
             {/* Crime Analytics */}
-            <motion.section
-              initial="hidden"
-              animate="visible"
-              custom={4}
-              variants={containerVariants}
-              className="bg-white rounded-2xl shadow-xl p-6"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <FiBarChart2 className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-800">
-                  Crime Statistics
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {dashboardData.topCrimes.map((crime) => (
-                  <motion.div
-                    key={crime.crime_type}
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="p-6 bg-gray-50 rounded-xl"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {crime.crime_type}
-                      </h3>
-                      <span className="text-2xl font-bold text-blue-600">
-                        {crime.total_reports}
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-gradient-to-r from-blue-500 to-blue-400 h-2 rounded-full"
-                        style={{
-                          width: `${
-                            (crime.total_reports /
-                              Math.max(
-                                1,
-                                dashboardData.topCrimes[0]?.total_reports || 1
-                              )) *
-                            100
-                          }%`,
-                        }}
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
           </div>
         )}
       </main>
