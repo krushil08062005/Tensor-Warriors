@@ -1,238 +1,5 @@
-// import { useState } from "react";
-// import { motion } from "framer-motion";
-// import {
-//   FiAlertCircle,
-//   FiCalendar,
-//   FiMapPin,
-//   FiFileText,
-//   FiLock,
-//   FiUploadCloud,
-//   FiArrowRight,
-// } from "react-icons/fi";
-// import Navbar from "../../components/CitizenNavbar";
-
-// const formVariants = {
-//   hidden: { opacity: 0, y: 20 },
-//   visible: { opacity: 1, y: 0 },
-// };
-
-// export default function RegisterCase() {
-//   const [isAnonymous, setIsAnonymous] = useState(false);
-//   const [selectedFile, setSelectedFile] = useState(null);
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     setIsSubmitting(true);
-//     // Simulate submission
-//     setTimeout(() => {
-//       setIsSubmitting(false);
-//     }, 2000);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50">
-//       <Navbar />
-//       <motion.main
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         className="max-w-4xl mx-auto p-6"
-//       >
-//         <motion.div
-//           initial={{ opacity: 0, y: 20 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           className="bg-white rounded-2xl shadow-xl p-8"
-//         >
-//           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-//             Report Incident
-//           </h1>
-//           <p className="text-gray-600 mb-8">
-//             Help keep your community safe by reporting incidents
-//           </p>
-
-//           {/* Anonymous Toggle */}
-//           <motion.button
-//             whileHover={{ scale: 1.02 }}
-//             whileTap={{ scale: 0.98 }}
-//             onClick={() => setIsAnonymous(!isAnonymous)}
-//             className={`w-full flex items-center justify-center gap-3 py-4 rounded-xl mb-8 transition-colors ${
-//               isAnonymous
-//                 ? "bg-blue-100 text-blue-600"
-//                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-//             }`}
-//           >
-//             <FiLock className="w-5 h-5" />
-//             <span className="font-medium">
-//               {isAnonymous ? "Reporting Anonymously" : "Report Anonymously"}
-//             </span>
-//           </motion.button>
-
-//           <form onSubmit={handleSubmit} className="space-y-8">
-//             {/* Basic Details Section */}
-//             <motion.div
-//               variants={formVariants}
-//               className="bg-gray-50 p-6 rounded-xl"
-//             >
-//               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-//                 <FiAlertCircle className="w-6 h-6 text-blue-600" />
-//                 Incident Details
-//               </h2>
-
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Crime Type
-//                   </label>
-//                   <div className="relative">
-//                     <select className="w-full pl-4 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white">
-//                       <option value="">Select crime type</option>
-//                       <option>Theft</option>
-//                       <option>Vandalism</option>
-//                       <option>Assault</option>
-//                       <option>Burglary</option>
-//                     </select>
-//                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-//                       <svg
-//                         className="w-5 h-5 text-gray-400"
-//                         fill="none"
-//                         stroke="currentColor"
-//                         viewBox="0 0 24 24"
-//                       >
-//                         <path
-//                           strokeLinecap="round"
-//                           strokeLinejoin="round"
-//                           strokeWidth={2}
-//                           d="M19 9l-7 7-7-7"
-//                         />
-//                       </svg>
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Date & Time
-//                   </label>
-//                   <div className="relative">
-//                     <FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-//                     <input
-//                       type="datetime-local"
-//                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
-//                     />
-//                   </div>
-//                 </div>
-
-//                 <div className="md:col-span-2">
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Location
-//                   </label>
-//                   <div className="relative">
-//                     <FiMapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-//                     <input
-//                       type="text"
-//                       placeholder="Enter location or address"
-//                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-//                     />
-//                   </div>
-//                 </div>
-
-//                 <div className="md:col-span-2">
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Description
-//                   </label>
-//                   <div className="relative">
-//                     <FiFileText className="absolute left-3 top-4 transform -translate-y-0 text-gray-400" />
-//                     <textarea
-//                       placeholder="Provide detailed description of the incident"
-//                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-//                       rows="4"
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-//             </motion.div>
-
-//             {/* Evidence Section */}
-//             <motion.div
-//               variants={formVariants}
-//               className="bg-gray-50 p-6 rounded-xl"
-//             >
-//               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-//                 <FiUploadCloud className="w-6 h-6 text-blue-600" />
-//                 Supporting Evidence
-//               </h2>
-
-//               <div className="space-y-6">
-//                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Upload Evidence
-//                   </label>
-//                   <div className="relative">
-//                     <input
-//                       type="file"
-//                       id="file-upload"
-//                       className="hidden"
-//                       onChange={(e) => setSelectedFile(e.target.files[0])}
-//                     />
-//                     <label
-//                       htmlFor="file-upload"
-//                       className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-blue-500 transition-colors cursor-pointer"
-//                     >
-//                       <FiUploadCloud className="w-12 h-12 text-gray-400 mb-4" />
-//                       <span className="text-blue-600 font-medium">
-//                         Click to upload
-//                       </span>
-//                       <span className="text-sm text-gray-500 mt-1">
-//                         or drag and drop files here
-//                       </span>
-//                     </label>
-//                     {selectedFile && (
-//                       <span className="block mt-2 text-sm text-gray-600">
-//                         Selected file: {selectedFile.name}
-//                       </span>
-//                     )}
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="block text-sm font-medium text-gray-700 mb-2">
-//                     Police Case Number (FIR)
-//                   </label>
-//                   <input
-//                     type="text"
-//                     placeholder="Enter official case number if available"
-//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-//                   />
-//                 </div>
-//               </div>
-//             </motion.div>
-
-//             <motion.button
-//               whileHover={{ scale: 1.02 }}
-//               whileTap={{ scale: 0.98 }}
-//               type="submit"
-//               disabled={isSubmitting}
-//               className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-xl font-medium hover:from-blue-700 hover:to-blue-600 transition-all flex items-center justify-center gap-2"
-//             >
-//               {isSubmitting ? (
-//                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-//               ) : (
-//                 <>
-//                   Submit Report
-//                   <FiArrowRight className="w-5 h-5" />
-//                 </>
-//               )}
-//             </motion.button>
-//           </form>
-//         </motion.div>
-//       </motion.main>
-//     </div>
-//   );
-// }
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";   
-import axios from 'axios';
 import {
   FiAlertCircle,
   FiCalendar,
@@ -245,8 +12,8 @@ import {
   FiCheck,
   FiAlertTriangle,
 } from "react-icons/fi";
-import Navbar from "../../components/CitizenNavbar";
-import {supabase} from "../../lib/supabase";
+import Navbar from "../../components/AuthNavbar";
+import { supabase } from "../../lib/supabase";
 
 const formVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -265,17 +32,28 @@ export default function RegisterCase() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
-  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
+  const [locationPermissionGranted, setLocationPermissionGranted] =
+    useState(false);
   const [crimeType, setCrimeType] = useState("");
-  const [dateTime, setDateTime] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [speechError, setSpeechError] = useState(null);
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [dateTime, setDateTime] = useState(() => {
+    const now = new Date();
+    // Convert to local datetime string in correct format
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  });
   const [description, setDescription] = useState("");
-  const [caseNumber, setCaseNumber] = useState(""); 
+  const [caseNumber, setCaseNumber] = useState("");
   const [submissionStatus, setSubmissionStatus] = useState({
     status: null, // null, "success", "error"
     message: "",
   });
-  const navigate = useNavigate();
-
 
   // Request user location on component mount
   useEffect(() => {
@@ -300,7 +78,7 @@ export default function RegisterCase() {
         (error) => {
           console.error("Error getting location:", error);
           // Default to a central location if permission denied
-          setCoordinates({ lat: 40.7128, lng: -74.0060 }); // New York as default
+          setCoordinates({ lat: 40.7128, lng: -74.006 }); // New York as default
         }
       );
     }
@@ -312,7 +90,53 @@ export default function RegisterCase() {
       }
     };
   }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+
+        recognition.onresult = (event) => {
+          const transcript = Array.from(event.results)
+            .map((result) => result[0])
+            .map((result) => result.transcript)
+            .join("");
+
+          if (event.results[0].isFinal) {
+            setDescription((prev) => prev + " " + transcript);
+            setInterimTranscript("");
+          } else {
+            setInterimTranscript(transcript);
+          }
+        };
+
+        recognition.onerror = (event) => {
+          setSpeechError("Error occurred in recognition: " + event.error);
+          setIsListening(false);
+        };
+
+        recognition.onstart = () => {
+          setIsListening(true);
+          setSpeechError(null);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        return () => {
+          recognition.stop();
+        };
+      } else {
+        setSpeechError("Speech recognition not supported in this browser");
+      }
+    }
+  }, []);
   // Initialize map when API loads and coordinates are available
   useEffect(() => {
     if (mapLoaded && coordinates.lat && coordinates.lng) {
@@ -342,19 +166,19 @@ export default function RegisterCase() {
       mapInstance.addListener("click", (e) => {
         const clickedLat = e.latLng.lat();
         const clickedLng = e.latLng.lng();
-        
+
         // Update marker position
         markerInstance.setPosition({
           lat: clickedLat,
           lng: clickedLng,
         });
-        
+
         // Update state with new coordinates
         setCoordinates({
           lat: clickedLat,
           lng: clickedLng,
         });
-        
+
         // Get address from coordinates
         reverseGeocode(clickedLat, clickedLng);
       });
@@ -364,12 +188,12 @@ export default function RegisterCase() {
         const position = markerInstance.getPosition();
         const newLat = position.lat();
         const newLng = position.lng();
-        
+
         setCoordinates({
           lat: newLat,
           lng: newLng,
         });
-        
+
         reverseGeocode(newLat, newLng);
       });
 
@@ -402,10 +226,10 @@ export default function RegisterCase() {
   // Reverse geocode - get address from coordinates
   const reverseGeocode = async (lat, lng) => {
     if (!window.google) return;
-    
+
     const geocoder = new window.google.maps.Geocoder();
     const latlng = { lat, lng };
-    
+
     geocoder.geocode({ location: latlng }, (results, status) => {
       if (status === "OK" && results[0]) {
         setAddress(results[0].formatted_address);
@@ -418,226 +242,93 @@ export default function RegisterCase() {
   // Upload file to Supabase storage
   const uploadFile = async (file) => {
     if (!file) return null;
-  
-    // First analyze the image
-    const analysisResult = await analyzeImageWithSightEngine(file);
-    
-    if (!analysisResult.success) {
-      throw new Error(`Image analysis failed: ${analysisResult.error}`);
-    }
-  
-    // If inappropriate content detected, you might want to handle it
-    if (analysisResult.is_detected) {
-      console.warn('Inappropriate content detected in image', analysisResult.data);
-      // You could choose to reject the upload here if needed
-      // throw new Error('Upload rejected due to inappropriate content');
-    }
-  
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Math.random()
+      .toString(36)
+      .substring(2, 15)}_${Date.now()}.${fileExt}`;
     const filePath = `evidence/${fileName}`;
-  
+
     const { data, error } = await supabase.storage
-      .from('incident-evidence')
+      .from("incident-evidence")
       .upload(filePath, file);
-  
+
     if (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
       throw new Error(`Error uploading file: ${error.message}`);
     }
-  
+
+    // Return the URL for the uploaded file
     const { data: urlData } = supabase.storage
-      .from('incident-evidence')
+      .from("incident-evidence")
       .getPublicUrl(filePath);
-  
-    return {
-      url: urlData.publicUrl,
-      analysis: analysisResult.data,
-      is_detected: analysisResult.is_detected
-    };
+
+    return urlData.publicUrl;
   };
-
-  // Enhanced analysis function with threshold checking
-const analyzeImageWithSightEngine = async (file) => {
-  try {
-    const formData = new FormData();
-    formData.append('media', file);
-    formData.append('models', 'nudity-2.1,weapon,alcohol,recreational_drug,medical,offensive-2.0,gore-2.0,violence,self-harm,gambling');
-    formData.append('api_user', '1043833218');
-    formData.append('api_secret', 'CfztvLVuKWqyid9XwGQbAz5yiPdwfbmg');
-
-    const response = await axios.post('https://api.sightengine.com/1.0/check.json', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-
-    // Check if any concerning content was detected above threshold
-    const isDetected = checkForConcerningContent(response.data);
-    
-    return {
-      success: true,
-      data: response.data,
-      is_detected: isDetected,
-      flagged_categories: getFlaggedCategories(response.data)
-    };
-  } catch (error) {
-    console.error('Error analyzing image:', error);
-    return {
-      success: false,
-      error: error.response?.data || error.message
-    };
-  }
-};
-
-// Helper function to check for concerning content
-const checkForConcerningContent = (analysisData) => {
-  const thresholds = {
-    nudity: 0.7,
-    weapon: 0.7,
-    alcohol: 0.8,
-    drugs: 0.8,
-    offensive: 0.7,
-    violence: 0.7,
-    self_harm: 0.9,
-    gambling: 0.8
-  };
-
-  return Object.entries(thresholds).some(([category, threshold]) => {
-    const score = getCategoryScore(analysisData, category);
-    return score >= threshold;
-  });
-};
-
-// Helper function to extract scores from different response structures
-const getCategoryScore = (data, category) => {
-  if (data[category] === undefined) return 0;
-  
-  // Handle different response structures
-  if (typeof data[category] === 'number') {
-    return data[category];
-  } else if (typeof data[category] === 'object') {
-    // For nested structures like nudity or offensive
-    if (category === 'nudity') {
-      return 1 - data[category].safe; // Higher risk if safe score is low
-    }
-    return data[category].prob || 0;
-  }
-  return 0;
-};
-
-// Get list of flagged categories
-const getFlaggedCategories = (analysisData) => {
-  const thresholds = {
-    nudity: 0.5,
-    weapon: 0.5,
-    alcohol: 0.5,
-    drugs: 0.5,
-    offensive: 0.5,
-    violence: 0.5,
-    self_harm: 0.5,
-    gambling: 0.5
-  };
-
-  return Object.entries(thresholds)
-    .filter(([category, threshold]) => {
-      const score = getCategoryScore(analysisData, category);
-      return score >= threshold;
-    })
-    .map(([category]) => category);
-};
 
   // Submit form data to Supabase
- // Submit form data to Supabase
- const submitToSupabase = async (formData) => {
-  try {
-    let fileUrl = null;
-    let mediaAnalysis = null;
-    let isDetected = false;
-    let flaggedCategories = []; // Initialize as empty array
+  const submitToSupabase = async (formData) => {
+    try {
+      // Upload file first if one is selected
+      let fileUrl = null;
+      if (selectedFile) {
+        fileUrl = await uploadFile(selectedFile);
+      }
 
-    if (selectedFile) {
-      const uploadResult = await uploadFile(selectedFile);
-      fileUrl = uploadResult.url;
-      mediaAnalysis = uploadResult.analysis;
-      isDetected = uploadResult.is_detected;
-      flaggedCategories = uploadResult.flagged_categories || []; // Ensure it's always defined
-    }
-
-    const { data: reportData, error: reportError } = await supabase
-      .from('reports')
-      .insert([
-        {
-          crime_type: formData.crimeType.toLowerCase(),
-          isAnonymous: formData.isAnonymous,
-          title: formData.crimeType,
-          address: formData.address,
-          latitude: formData.coordinates.lat,
-          longitude: formData.coordinates.lng,
-          description: formData.description,
-          severity: 'low',
-          status: 'pending', 
-          reported_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          media_analysis: mediaAnalysis,
-          is_detected: isDetected,
-          flagged_categories: flaggedCategories // Use the properly defined variable
-        },
-      ])
-      .select();
-
-    if (reportError) throw reportError;
-    
-    if (fileUrl && reportData && reportData.length > 0) {
-      const reportId = reportData[0].id;
-      const fileType = selectedFile.type.split('/')[0];
-      
-      const { error: mediaError } = await supabase
-        .from('report_media')
+      // Add the incident data to the incidents table
+      const { data, error } = await supabase
+        .from("reports")
         .insert([
           {
-            report_id: reportId,
-            file_url: fileUrl,
-            file_type: fileType,
-            uploaded_at: new Date().toISOString(),
-            analysis_result: mediaAnalysis,
-            is_detected: isDetected,
-            flagged_categories: flaggedCategories // Use the same variable here
-          }
-        ]);
+            crime_type: formData.crimeType.toLowerCase(),
+            title: formData.crimeType,
+            // datetime: formData.dateTime,
+            address: formData.address,
+            latitude: formData.coordinates.lat,
+            longitude: formData.coordinates.lng,
+            description: formData.description,
+            // is_anonymous: formData.isAnonymous,
+            // police_case_number: formData.caseNumber,
+            severity: "low",
+            // evidence_url: fileUrl,
+            status: "pending",
+            reported_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ])
+        .select();
 
-      if (mediaError) throw mediaError;
+      if (error) throw error;
+
+      return { success: true, data };
+    } catch (error) {
+      console.error("Error submitting to Supabase:", error);
+      return { success: false, error: error.message };
     }
-    
-    return { 
-      success: true, 
-      data: reportData,
-      message: "Report submitted successfully!" 
-    };
-  } catch (error) {
-    console.error('Error submitting to Supabase:', error);
-    return { 
-      success: false, 
-      error: error.message || "Failed to submit report" 
-    };
-  }
-};
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionStatus({ status: null, message: "" });
-    
+
     // Validate required fields
-    if (!crimeType || !dateTime || !description || !coordinates.lat || !coordinates.lng) {
+    if (
+      !crimeType ||
+      !dateTime ||
+      !description ||
+      !coordinates.lat ||
+      !coordinates.lng
+    ) {
       setIsSubmitting(false);
-      setSubmissionStatus({ 
-        status: "error", 
-        message: "Please fill in all required fields and select a location on the map." 
+      setSubmissionStatus({
+        status: "error",
+        message:
+          "Please fill in all required fields and select a location on the map.",
       });
       return;
     }
-    
+
     // Collect form data
     const formData = {
       isAnonymous,
@@ -648,17 +339,17 @@ const getFlaggedCategories = (analysisData) => {
       description,
       caseNumber,
     };
-    
+
     try {
       // Submit data to Supabase
       const result = await submitToSupabase(formData);
-      
+
       if (result.success) {
-        setSubmissionStatus({ 
-          status: "success", 
-          message: "Your incident report has been submitted successfully." 
+        setSubmissionStatus({
+          status: "success",
+          message: "Your incident report has been submitted successfully.",
         });
-        
+
         // Reset form after successful submission
         setTimeout(() => {
           setCrimeType("");
@@ -666,19 +357,18 @@ const getFlaggedCategories = (analysisData) => {
           setDescription("");
           setCaseNumber("");
           setSelectedFile(null);
-          
+          // Don't reset location as the user might want to report another incident at the same place
         }, 3000);
-        navigate('/citizen-dashboard');
       } else {
-        setSubmissionStatus({ 
-          status: "error", 
-          message: `Failed to submit report: ${result.error}` 
+        setSubmissionStatus({
+          status: "error",
+          message: `Failed to submit report: ${result.error}`,
         });
       }
     } catch (error) {
-      setSubmissionStatus({ 
-        status: "error", 
-        message: `An unexpected error occurred: ${error.message}` 
+      setSubmissionStatus({
+        status: "error",
+        message: `An unexpected error occurred: ${error.message}`,
       });
     } finally {
       setIsSubmitting(false);
@@ -699,7 +389,7 @@ const getFlaggedCategories = (analysisData) => {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          
+
           map.setCenter(userLocation);
           marker.setPosition(userLocation);
           setCoordinates(userLocation);
@@ -738,8 +428,8 @@ const getFlaggedCategories = (analysisData) => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               className={`p-4 mb-6 rounded-lg flex items-center gap-3 ${
-                submissionStatus.status === "success" 
-                  ? "bg-green-100 text-green-800" 
+                submissionStatus.status === "success"
+                  ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
               }`}
             >
@@ -861,13 +551,13 @@ const getFlaggedCategories = (analysisData) => {
                       <FiNavigation className="w-5 h-5" />
                     </button>
                   </div>
-                  
+
                   {/* Map Container */}
-                  <div 
-                    id="map" 
+                  <div
+                    id="map"
                     className="w-full h-64 rounded-lg border border-gray-300 overflow-hidden mb-2"
                   ></div>
-                  
+
                   {/* Coordinates Display */}
                   {coordinates.lat && coordinates.lng && (
                     <div className="text-sm text-gray-600 flex gap-4">
@@ -885,13 +575,57 @@ const getFlaggedCategories = (analysisData) => {
                     <FiFileText className="absolute left-3 top-4 transform -translate-y-0 text-gray-400" />
                     <textarea
                       placeholder="Provide detailed description of the incident"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                      className="w-full pl-10 pr-16 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                       rows="4"
-                      value={description}
+                      value={
+                        description +
+                        (interimTranscript ? " " + interimTranscript : "")
+                      }
                       onChange={(e) => setDescription(e.target.value)}
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!isListening) {
+                          const recognition = new (window.SpeechRecognition ||
+                            window.webkitSpeechRecognition)();
+                          recognition.start();
+                        }
+                      }}
+                      className={`absolute right-3 top-4 p-2 rounded-full ${
+                        isListening
+                          ? "text-red-600 animate-pulse"
+                          : "text-gray-600 hover:text-blue-600"
+                      } transition-colors`}
+                      title={
+                        isListening ? "Stop recording" : "Start voice input"
+                      }
+                      disabled={
+                        !(
+                          "SpeechRecognition" in window ||
+                          "webkitSpeechRecognition" in window
+                        )
+                      }
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                        />
+                      </svg>
+                    </button>
                   </div>
+                  {speechError && (
+                    <p className="text-red-500 text-sm mt-2">{speechError}</p>
+                  )}
                 </div>
               </div>
             </motion.div>

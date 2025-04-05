@@ -18,6 +18,7 @@ import Navbar from "../../components/CitizenNavbar";
 import Footer from "../../components/Footer";
 import { useAuth } from "../../context/AuthContext";
 import { supabase } from "../../lib/supabase";
+import IncidentMap from "../../components/IncidentMap";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -33,6 +34,8 @@ export default function Dashboard() {
   const [liveData, setLiveData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const LIBRARIES = ["visualization"];
+  const GOOGLE_MAPS_API_KEY = "AIzaSyAUZwzaEsPjMu4CbgC86Fi-wRE_KyX7-SE";
   const [filters, setFilters] = useState({
     types: [],
     severity: [],
@@ -55,23 +58,23 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch total reports count
       const { count: totalIncidents } = await supabase
-        .from('reports')
-        .select('*', { count: 'exact', head: true });
+        .from("reports")
+        .select("*", { count: "exact", head: true });
 
       // Fetch recent incidents (last 10)
       const { data: recentIncidents } = await supabase
-        .from('reports')
-        .select('*')
-        .order('reported_at', { ascending: false })
+        .from("reports")
+        .select("*")
+        .order("reported_at", { ascending: false })
         .limit(10);
 
       // Fetch crime statistics by type
       const { data: statsData } = await supabase
-        .from('crime_statistics')
-        .select('crime_type, total_reports');
+        .from("crime_statistics")
+        .select("crime_type, total_reports");
 
       // Process stats into the format we need
       const stats = {
@@ -79,10 +82,10 @@ export default function Dashboard() {
         assault: 0,
         vandalism: 0,
         fraud: 0,
-        other: 0
+        other: 0,
       };
-      
-      statsData.forEach(item => {
+
+      statsData.forEach((item) => {
         stats[item.crime_type] = item.total_reports;
       });
 
@@ -92,69 +95,82 @@ export default function Dashboard() {
       sevenDaysAgo.setDate(now.getDate() - 7);
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(now.getDate() - 30);
-      
+
       // Fetch reports for different time ranges
       const { data: weekData } = await supabase
-        .from('reports')
-        .select('crime_type')
-        .gte('reported_at', sevenDaysAgo.toISOString());
+        .from("reports")
+        .select("crime_type")
+        .gte("reported_at", sevenDaysAgo.toISOString());
 
       const { data: monthData } = await supabase
-        .from('reports')
-        .select('crime_type')
-        .gte('reported_at', thirtyDaysAgo.toISOString());
+        .from("reports")
+        .select("crime_type")
+        .gte("reported_at", thirtyDaysAgo.toISOString());
 
       // Process time stats
       const processTimeStats = (data) => {
-        const counts = { theft: 0, assault: 0, vandalism: 0, fraud: 0, other: 0 };
-        data.forEach(item => counts[item.crime_type]++);
-        
+        const counts = {
+          theft: 0,
+          assault: 0,
+          vandalism: 0,
+          fraud: 0,
+          other: 0,
+        };
+        data.forEach((item) => counts[item.crime_type]++);
+
         const total = data.length;
-        const mostCommon = Object.entries(counts).reduce((a, b) => a[1] > b[1] ? a : b)[0];
-        
+        const mostCommon = Object.entries(counts).reduce((a, b) =>
+          a[1] > b[1] ? a : b
+        )[0];
+
         const categories = Object.entries(counts).map(([name, count]) => ({
           name: name.charAt(0).toUpperCase() + name.slice(1),
-          percentage: total > 0 ? Math.round((count / total) * 100) : 0
+          percentage: total > 0 ? Math.round((count / total) * 100) : 0,
         }));
-        
+
         const topTypes = Object.entries(counts)
           .map(([name, count]) => ({ name, count }))
           .sort((a, b) => b.count - a.count)
           .slice(0, 5);
-        
+
         return { total, mostCommon, categories, topTypes };
       };
 
       const timeStats = {
         "7days": processTimeStats(weekData),
         "30days": processTimeStats(monthData),
-        "year": {
+        year: {
           total: totalIncidents,
-          mostCommon: Object.entries(stats).reduce((a, b) => a[1] > b[1] ? a : b)[0],
+          mostCommon: Object.entries(stats).reduce((a, b) =>
+            a[1] > b[1] ? a : b
+          )[0],
           categories: Object.entries(stats).map(([name, count]) => ({
             name: name.charAt(0).toUpperCase() + name.slice(1),
-            percentage: totalIncidents > 0 ? Math.round((count / totalIncidents) * 100) : 0
+            percentage:
+              totalIncidents > 0
+                ? Math.round((count / totalIncidents) * 100)
+                : 0,
           })),
           topTypes: Object.entries(stats)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => b.count - a.count)
-            .slice(0, 5)
-        }
+            .slice(0, 5),
+        },
       };
 
       setLiveData({
         totalIncidents,
-        recentIncidents: recentIncidents.map(incident => ({
+        recentIncidents: recentIncidents.map((incident) => ({
           id: incident.id,
           type: incident.title,
           category: incident.crime_type,
           date: new Date(incident.reported_at).toLocaleString(),
-          location: incident.address || 'Unknown location',
-          verified: incident.status === 'resolved',
-          severity: incident.severity
+          location: incident.address || "Unknown location",
+          verified: incident.status === "resolved",
+          severity: incident.severity,
         })),
         stats,
-        timeStats
+        timeStats,
       });
 
       setLoading(false);
@@ -168,13 +184,17 @@ export default function Dashboard() {
   useEffect(() => {
     if (isLoggedIn) {
       fetchData();
-      
+
       // Setup realtime subscription for reports table
       const reportsSubscription = supabase
-        .channel('reports_changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, payload => {
-          fetchData();
-        })
+        .channel("reports_changes")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "reports" },
+          (payload) => {
+            fetchData();
+          }
+        )
         .subscribe();
 
       return () => {
@@ -220,7 +240,7 @@ export default function Dashboard() {
           variants={containerVariants}
           className="space-y-2"
         >
-          <h1 className="text-4xl font-bold text-gray-800">CrimeWatch Dashboard</h1>
+          <h1 className="text-4xl font-bold text-gray-800">Safety Dashboard</h1>
           <p className="text-gray-600 text-lg">
             Community Incident Reporting and Analytics
           </p>
@@ -272,12 +292,14 @@ export default function Dashboard() {
                     onClick={() => toggleFilter("types", type.name)}
                     className={`flex items-center gap-2 p-3 rounded-lg ${
                       filters.types.includes(type.name)
-                        ? `bg-${type.color}-100 border-${type.color}-500`
+                        ? `bg-${type.color}-100 border-${type.color}`
                         : "bg-gray-100 border-transparent"
                     } border-2 transition-all`}
                   >
                     <type.icon className={`w-5 h-5 text-${type.color}-600`} />
-                    <span className="font-medium">{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</span>
+                    <span className="font-medium">
+                      {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -317,7 +339,7 @@ export default function Dashboard() {
                 </label>
               </div>
             </motion.section>
-
+            Map Section
             {/* Map Section */}
             <motion.section
               initial="hidden"
@@ -328,26 +350,12 @@ export default function Dashboard() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <FiMap className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-800">Incident Map</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Incident Map
+                </h2>
               </div>
-              <div className="h-96 bg-gray-100 rounded-xl flex items-center justify-center">
-                <div className="text-center text-gray-600 max-w-md">
-                  <FiMap className="w-16 h-16 mx-auto mb-4" />
-                  <p className="mb-4">
-                    Map configuration required. Please add your Google Maps API key in your map component.
-                  </p>
-                  <a
-                    href="https://developers.google.com/maps/documentation/javascript/get-api-key"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  >
-                    Get API key from Google Cloud Console
-                  </a>
-                </div>
-              </div>
+              <IncidentMap />
             </motion.section>
-
             {/* Recent Incidents */}
             <motion.section
               initial="hidden"
@@ -359,7 +367,9 @@ export default function Dashboard() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <FiBell className="w-6 h-6 text-blue-600" />
-                  <h2 className="text-2xl font-bold text-gray-800">Recent Incidents</h2>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    Recent Incidents
+                  </h2>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
@@ -368,7 +378,10 @@ export default function Dashboard() {
                       type="date"
                       className="bg-gray-100 p-2 rounded-lg"
                       onChange={(e) =>
-                        setDateRange((prev) => ({ ...prev, start: e.target.value }))
+                        setDateRange((prev) => ({
+                          ...prev,
+                          start: e.target.value,
+                        }))
                       }
                     />
                     <span>to</span>
@@ -376,7 +389,10 @@ export default function Dashboard() {
                       type="date"
                       className="bg-gray-100 p-2 rounded-lg"
                       onChange={(e) =>
-                        setDateRange((prev) => ({ ...prev, end: e.target.value }))
+                        setDateRange((prev) => ({
+                          ...prev,
+                          end: e.target.value,
+                        }))
                       }
                     />
                   </div>
@@ -390,11 +406,17 @@ export default function Dashboard() {
               <div className="space-y-4">
                 <AnimatePresence>
                   {liveData.recentIncidents
-                    .filter(incident => {
-                      if (filters.types.length > 0 && !filters.types.includes(incident.category)) {
+                    .filter((incident) => {
+                      if (
+                        filters.types.length > 0 &&
+                        !filters.types.includes(incident.category)
+                      ) {
                         return false;
                       }
-                      if (filters.severity.length > 0 && !filters.severity.includes(incident.severity)) {
+                      if (
+                        filters.severity.length > 0 &&
+                        !filters.severity.includes(incident.severity)
+                      ) {
                         return false;
                       }
                       if (filters.verifiedOnly && !incident.verified) {
@@ -412,7 +434,9 @@ export default function Dashboard() {
                       >
                         <div className="space-y-1">
                           <div className="flex items-center gap-3">
-                            <span className="font-semibold text-lg">{incident.type}</span>
+                            <span className="font-semibold text-lg">
+                              {incident.type}
+                            </span>
                             <span className="text-sm px-2 py-1 rounded-full bg-blue-100 text-blue-600">
                               {incident.category}
                             </span>
@@ -424,15 +448,11 @@ export default function Dashboard() {
                             {incident.date} • {incident.location}
                           </div>
                         </div>
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                          View Details
-                        </button>
                       </motion.div>
                     ))}
                 </AnimatePresence>
               </div>
             </motion.section>
-
             {/* Crime Statistics Section */}
             <motion.section
               initial="hidden"
@@ -443,14 +463,18 @@ export default function Dashboard() {
             >
               <div className="flex items-center gap-3 mb-6">
                 <FiBarChart2 className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-800">Crime Statistics</h2>
+                <h2 className="text-2xl font-bold text-gray-800">
+                  Crime Statistics
+                </h2>
               </div>
 
               <div className="flex gap-4 mb-6">
                 <button
                   onClick={() => setTimeRange("7days")}
                   className={`px-4 py-2 rounded-lg ${
-                    timeRange === "7days" ? "bg-blue-600 text-white" : "bg-gray-100"
+                    timeRange === "7days"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100"
                   }`}
                 >
                   Last 7 Days
@@ -458,7 +482,9 @@ export default function Dashboard() {
                 <button
                   onClick={() => setTimeRange("30days")}
                   className={`px-4 py-2 rounded-lg ${
-                    timeRange === "30days" ? "bg-blue-600 text-white" : "bg-gray-100"
+                    timeRange === "30days"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100"
                   }`}
                 >
                   Last 30 Days
@@ -466,113 +492,125 @@ export default function Dashboard() {
                 <button
                   onClick={() => setTimeRange("year")}
                   className={`px-4 py-2 rounded-lg ${
-                    timeRange === "year" ? "bg-blue-600 text-white" : "bg-gray-100"
+                    timeRange === "year"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-100"
                   }`}
                 >
                   Last Year
                 </button>
               </div>
 
-              {liveData && liveData.timeStats && liveData.timeStats[timeRange] && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Total Incidents */}
-                  <div className="bg-blue-50 p-6 rounded-xl">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                      Total Incidents
-                    </h3>
-                    <p className="text-3xl font-bold text-blue-600">
-                      {liveData.timeStats[timeRange].total}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Past{" "}
-                      {timeRange === "7days"
-                        ? "7"
-                        : timeRange === "30days"
-                        ? "30"
-                        : "365"}{" "}
-                      days
-                    </p>
-                  </div>
-
-                  {/* Most Common */}
-                  <div className="bg-green-50 p-6 rounded-xl">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                      Most Common
-                    </h3>
-                    <p className="text-3xl font-bold text-green-600">
-                      {liveData.timeStats[timeRange].mostCommon}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Top incident category
-                    </p>
-                  </div>
-
-                  {/* Incidents by Category */}
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 col-span-1 md:col-span-3">
-                    <div className="flex items-center gap-3 mb-4">
-                      <FiPieChart className="w-5 h-5 text-blue-600" />
-                      <h3 className="text-lg font-semibold text-gray-700">
-                        Incidents by Category
+              {liveData &&
+                liveData.timeStats &&
+                liveData.timeStats[timeRange] && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Total Incidents */}
+                    <div className="bg-blue-50 p-6 rounded-xl">
+                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                        Total Incidents
                       </h3>
+                      <p className="text-3xl font-bold text-blue-600">
+                        {liveData.timeStats[timeRange].total}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Past{" "}
+                        {timeRange === "7days"
+                          ? "7"
+                          : timeRange === "30days"
+                          ? "30"
+                          : "365"}{" "}
+                        days
+                      </p>
                     </div>
-                    <div className="space-y-3">
-                      {liveData.timeStats[timeRange].categories.map(
-                        (category, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between"
-                          >
-                            <span className="text-gray-700">{category.name}</span>
-                            <div className="flex items-center gap-4">
-                              <div className="w-32 bg-gray-200 rounded-full h-2.5">
+
+                    {/* Most Common */}
+                    <div className="bg-green-50 p-6 rounded-xl">
+                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                        Most Common
+                      </h3>
+                      <p className="text-3xl font-bold text-green-600">
+                        {liveData.timeStats[timeRange].mostCommon}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Top incident category
+                      </p>
+                    </div>
+
+                    {/* Incidents by Category */}
+                    <div className="bg-white p-6 rounded-xl border border-gray-200 col-span-1 md:col-span-3">
+                      <div className="flex items-center gap-3 mb-4">
+                        <FiPieChart className="w-5 h-5 text-blue-600" />
+                        <h3 className="text-lg font-semibold text-gray-700">
+                          Incidents by Category
+                        </h3>
+                      </div>
+                      <div className="space-y-3">
+                        {liveData.timeStats[timeRange].categories.map(
+                          (category, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between"
+                            >
+                              <span className="text-gray-700">
+                                {category.name}
+                              </span>
+                              <div className="flex items-center gap-4">
+                                <div className="w-32 bg-gray-200 rounded-full h-2.5">
+                                  <div
+                                    className="bg-blue-600 h-2.5 rounded-full"
+                                    style={{ width: `${category.percentage}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-gray-700 font-medium">
+                                  {category.percentage}%
+                                </span>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Top Incident Types */}
+                    <div className="bg-white p-6 rounded-xl border border-gray-200 col-span-1 md:col-span-3">
+                      <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                        Top Incident Types
+                      </h3>
+                      <div className="flex flex-wrap gap-4">
+                        {liveData.timeStats[timeRange].topTypes.map(
+                          (type, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2"
+                            >
+                              <span className="text-gray-700">
+                                {type.name.charAt(0).toUpperCase() +
+                                  type.name.slice(1)}
+                              </span>
+                              <div className="w-24 bg-gray-200 rounded-full h-2.5">
                                 <div
                                   className="bg-blue-600 h-2.5 rounded-full"
-                                  style={{ width: `${category.percentage}%` }}
+                                  style={{
+                                    width: `${
+                                      (type.count /
+                                        liveData.timeStats[timeRange]
+                                          .topTypes[0].count) *
+                                      100
+                                    }%`,
+                                  }}
                                 ></div>
                               </div>
                               <span className="text-gray-700 font-medium">
-                                {category.percentage}%
+                                {type.count}
                               </span>
                             </div>
-                          </div>
-                        )
-                      )}
+                          )
+                        )}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Top Incident Types */}
-                  <div className="bg-white p-6 rounded-xl border border-gray-200 col-span-1 md:col-span-3">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                      Top Incident Types
-                    </h3>
-                    <div className="flex flex-wrap gap-4">
-                      {liveData.timeStats[timeRange].topTypes.map(
-                        (type, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <span className="text-gray-700">{type.name.charAt(0).toUpperCase() + type.name.slice(1)}</span>
-                            <div className="w-24 bg-gray-200 rounded-full h-2.5">
-                              <div
-                                className="bg-blue-600 h-2.5 rounded-full"
-                                style={{
-                                  width: `${
-                                    (type.count /
-                                      liveData.timeStats[timeRange].topTypes[0]
-                                        .count) *
-                                    100
-                                  }%`,
-                                }}
-                              ></div>
-                            </div>
-                            <span className="text-gray-700 font-medium">
-                              {type.count}
-                            </span>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
+                )}
             </motion.section>
           </div>
         )}
