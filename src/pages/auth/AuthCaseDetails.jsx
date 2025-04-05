@@ -18,7 +18,7 @@ const handleVerify = () => {
   navigate("/pending");
 };
 
-const AuthCaseDetails = () => {
+const VerifyCaseDetails = () => {
   // Move all hooks INSIDE the component
   const { caseId } = useParams();
   const { user } = useContext(AuthContext);
@@ -132,4 +132,4 @@ const AuthCaseDetails = () => {
   );
 };
 
-export default AuthCaseDetails;
+export default VerifyCaseDetails;

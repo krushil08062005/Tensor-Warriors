@@ -95,7 +95,7 @@ const caseList = [
   },
 ];
 
-export default function AuthCases() {
+export default function Cases() {
   const [selectedCase, setSelectedCase] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
