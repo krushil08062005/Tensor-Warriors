@@ -7,6 +7,7 @@ const Home = () => {
     <div className="min-h-screen">
       <Navbar />
 
+      {/* Hero Section */}
       <header className="bg-gray-900 text-white py-16 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12 h-full">
           {/* Text Content */}
@@ -46,6 +47,42 @@ const Home = () => {
           </div>
         </div>
       </header>
+      <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="flex justify-center">
+            <img
+              src="../../images/Flux_Dev_A_realistic_laptop_on_a_desk_with_the_screen_displayi_0 (1).jpg"
+              alt="Laptop showing map-based app"
+              className="w-full max-w-lg rounded-2xl shadow-2xl"
+              loading="lazy"
+            />
+          </div>
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-gray-800">
+              Visualize Incidents in Real-Time
+            </h2>
+            <p className="text-lg text-gray-600">
+              Our interactive map allows users to report and explore incidents
+              across the community. Just click on the map to select a location,
+              add your details, and submit.
+            </p>
+            <ul className="space-y-2 text-gray-700">
+              <li>Drop pins to report exact locations</li>
+              <li>Fill quick forms to describe incidents</li>
+              <li>Attach images or evidence securely</li>
+              <li>Filter and browse reports in your area</li>
+            </ul>
+            <button
+              className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              onClick={() => navigate("/login")}
+            >
+              View Map
+            </button>
+          </div>
+
+          {/* Image Preview */}
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-16 px-4 bg-white">
