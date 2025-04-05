@@ -339,7 +339,7 @@ export default function Dashboard() {
                 </label>
               </div>
             </motion.section>
-            Map Section
+
             {/* Map Section */}
             <motion.section
               initial="hidden"
