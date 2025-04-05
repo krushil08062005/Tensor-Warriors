@@ -1,39 +1,23 @@
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import Home from "./pages/Home";
-// import RegisterCase from "./pages/RegisterCase";
-// import CaseDetails from "./pages/CaseDetails";
-// import Cases from "./pages/Cases";
-// import { LoadScript } from "@react-google-maps/api";
-// import { GOOGLE_MAPS_CONFIG } from "./config/maps";
-
-// export default function App() {
-//   return (
-//     <LoadScript {...GOOGLE_MAPS_CONFIG}>
-//       <Router>
-//         <Routes>
-//           <Route path="/" element={<Home />} />
-//           <Route path="/cases" element={<Cases />} />
-//           <Route path="/register-case" element={<RegisterCase />} />
-//           <Route path="/case/:id" element={<CaseDetails />} />
-//         </Routes>
-//       </Router>
-//     </LoadScript>
-//   );
-// }
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoadScript } from "@react-google-maps/api";
 import { GOOGLE_MAPS_CONFIG } from "./config/maps";
 import { AuthProvider } from "./context/AuthContext";
 
-// Import page components
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
+import CitizenDashboard from "./pages/citizen/CitizenDashboard";
+import AuthDashboard from "./pages/auth/AuthDashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import RegisterCase from "./pages/RegisterCase";
-import Cases from "./pages/Cases";
-import CaseDetails from "./pages/CaseDetails";
+import CitizenRegisterCase from "./pages/citizen/CitizenRegisterCase";
+import AuthRegisterCase from "./pages/auth/AuthRegisterCase";
+import CitizenCases from "./pages/citizen/CitizenCases";
+import AuthCases from "./pages/auth/AuthCases";
+import CitizenCaseDetails from "./pages/citizen/CitizenCaseDetails";
+import AuthCaseDetails from "./pages/auth/AuthCaseDetails";
+import TotalCases from "./pages/auth/TotalCases";
+import ResolvedCases from "./pages/auth/ResolvedCases";
+import ApprovedCases from "./pages/auth/ApprovedCases";
+import PendingCases from "./pages/auth/PendingCases";
 
 function App() {
   return (
@@ -42,12 +26,28 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/citizen-dashboard" element={<CitizenDashboard />} />
+            <Route path="/auth-dashboard" element={<AuthDashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/register-case" element={<RegisterCase />} />
-            <Route path="/cases" element={<Cases />} />
-            <Route path="/case/:id" element={<CaseDetails />} />
+            <Route
+              path="/citizen-register-case"
+              element={<CitizenRegisterCase />}
+            />
+            <Route path="/auth-register-case" element={<AuthRegisterCase />} />
+            <Route path="/citizen-cases" element={<CitizenCases />} />
+            <Route
+              path="/citizen-case-details"
+              element={<CitizenCaseDetails />}
+            />
+            <Route path="/auth-cases" element={<AuthCases />} />
+            <Route path="/auth-case-details" element={<AuthCaseDetails />} />
+            <Route path="/auth-cases" element={<AuthCases />} />
+            <Route path="/case/:id" element={<AuthCaseDetails />} />
+            <Route path="/total" element={<TotalCases />} />
+            <Route path="/resolved" element={<ResolvedCases />} />
+            <Route path="/approved" element={<ApprovedCases />} />
+            <Route path="/pending" element={<PendingCases />}></Route>
           </Routes>
         </Router>
       </AuthProvider>
