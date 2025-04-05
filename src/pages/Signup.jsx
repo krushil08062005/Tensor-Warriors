@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiArrowRight } from "react-icons/fi";
 import Navbar from "../components/CitizenNavbar";
 import Footer from "../components/Footer";
-import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext"; // make sure this path is correct
 
 const formVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -10,16 +12,29 @@ const formVariants = {
 };
 
 export default function Signup() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [password, setPassword] = useState("");
+  const { signup } = useAuth();
 
-  const handleSubmit = (e) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    setError("");
+
+    try {
+      await signup(email, password, "citizen");
+      navigate("/login") // or "authority" if role selection is added later
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Signup failed");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const getPasswordStrength = () => {
@@ -84,6 +99,8 @@ export default function Signup() {
                       <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder="John Doe"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         required
@@ -100,6 +117,8 @@ export default function Signup() {
                       <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="john.doe@example.com"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         required
@@ -116,9 +135,9 @@ export default function Signup() {
                       <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="password"
-                        placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         required
                       />
@@ -131,6 +150,10 @@ export default function Signup() {
                     </div>
                   </div>
                 </div>
+
+                {error && (
+                  <p className="text-red-600 text-sm text-center">{error}</p>
+                )}
 
                 <button
                   type="submit"

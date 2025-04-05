@@ -6,11 +6,6 @@ import Footer from "../components/Footer";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const tabVariants = {
-  active: { scale: 1.05, backgroundColor: "#f3f4f6" },
-  inactive: { scale: 1, backgroundColor: "#ffffff" },
-};
-
 const formVariants = {
   hidden: { opacity: 0, x: -20 },
   visible: { opacity: 1, x: 0 },
@@ -20,19 +15,28 @@ export default function Login() {
   const { login } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("public");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // ✅ Fix added here
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      login();
-      // Modified navigation based on active tab
-      const path =
-        activeTab === "public" ? "/citizen-dashboard" : "/auth-dashboard";
+    setErrorMessage("");
+
+    const form = e.currentTarget;
+    const email = form.email?.value;
+    const password = form.password?.value;
+
+    try {
+      await login(email, password);
+      const path = activeTab === "public" ? "/citizen-dashboard" : "/auth-dashboard";
       navigate(path);
+    } catch (error) {
+      console.error("Login failed:", error.message);
+      setErrorMessage(error.message || "Login failed. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const PublicLoginForm = () => (
@@ -51,6 +55,7 @@ export default function Login() {
           <div className="relative">
             <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
+              name="email"
               type="email"
               placeholder="john.doe@example.com"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
@@ -65,6 +70,7 @@ export default function Login() {
           <div className="relative">
             <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
+              name="password"
               type="password"
               placeholder="••••••••"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
@@ -73,6 +79,11 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {errorMessage && (
+        <p className="text-red-600 text-sm text-center">{errorMessage}</p>
+      )}
+
       <button
         type="submit"
         disabled={isLoading}
@@ -101,13 +112,14 @@ export default function Login() {
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Username
+            Email or Username
           </label>
           <div className="relative">
             <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
+              name="email"
               type="text"
-              placeholder="authority_username"
+              placeholder="authority@example.com"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
               required
             />
@@ -120,6 +132,7 @@ export default function Login() {
           <div className="relative">
             <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
+              name="password"
               type="password"
               placeholder="••••••••"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
@@ -134,6 +147,7 @@ export default function Login() {
           <div className="relative">
             <FiShield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
+              name="authorityCode"
               type="text"
               placeholder="XXXX-XXXX-XXXX"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
@@ -142,6 +156,11 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {errorMessage && (
+        <p className="text-red-600 text-sm text-center">{errorMessage}</p>
+      )}
+
       <button
         type="submit"
         disabled={isLoading}
@@ -164,7 +183,7 @@ export default function Login() {
       <Navbar />
       <main className="flex-grow p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex">
-          {/* Illustration Section */}
+          {/* Left Illustration */}
           <div className="hidden md:block flex-1 bg-gradient-to-br from-blue-600 to-blue-500 p-8">
             <div className="h-full flex flex-col justify-center items-center text-white">
               <img
@@ -182,7 +201,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Form Section */}
+          {/* Right Form */}
           <div className="flex-1 p-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -225,11 +244,7 @@ export default function Login() {
                 </motion.button>
               </div>
 
-              {activeTab === "public" ? (
-                <PublicLoginForm />
-              ) : (
-                <AuthorityLoginForm />
-              )}
+              {activeTab === "public" ? <PublicLoginForm /> : <AuthorityLoginForm />}
 
               <div className="mt-6 text-center">
                 <a
