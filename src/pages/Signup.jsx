@@ -4,8 +4,7 @@ import Navbar from "../components/CitizenNavbar";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // make sure this path is correct
-
+import { useAuth } from "../context/AuthContext";
 const formVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -28,7 +27,7 @@ export default function Signup() {
 
     try {
       await signup(email, password, "citizen");
-      navigate("/login") // or "authority" if role selection is added later
+      navigate("/login") 
     } catch (err) {
       console.error(err);
       setError(err.message || "Signup failed");
@@ -49,7 +48,6 @@ export default function Signup() {
       <Navbar />
       <main className="flex-grow p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex">
-          {/* Illustration Section */}
           <div className="hidden md:block flex-1 bg-gradient-to-br from-blue-600 to-blue-500 p-8">
             <div className="h-full flex flex-col justify-center items-center text-white">
               <img
@@ -65,7 +63,6 @@ export default function Signup() {
             </div>
           </div>
 
-          {/* Form Section */}
           <div className="flex-1 p-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -90,7 +87,6 @@ export default function Signup() {
                 animate="visible"
               >
                 <div className="space-y-4">
-                  {/* Name Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Full Name
@@ -108,7 +104,6 @@ export default function Signup() {
                     </div>
                   </div>
 
-                  {/* Email Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email Address
@@ -126,7 +121,6 @@ export default function Signup() {
                     </div>
                   </div>
 
-                  {/* Password Input */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Password

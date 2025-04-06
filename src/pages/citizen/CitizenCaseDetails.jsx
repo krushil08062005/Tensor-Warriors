@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiCheckSquare, FiClock, FiAlertTriangle, FiX, FiMapPin, FiCalendar } from 'react-icons/fi';
-import { supabase } from '../../lib/supabase'; // Adjust the import path as needed
+import { supabase } from '../../lib/supabase';
 
 const IncidentDetailsModal = ({ incidentId, onClose }) => {
   const [incident, setIncident] = useState(null);

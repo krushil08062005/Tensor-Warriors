@@ -17,7 +17,6 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { AuthContext } from "../context/AuthContext";
-
 const NavLink = ({ to, children, icon: Icon, onClick }) => (
   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
     <Link
@@ -31,7 +30,7 @@ const NavLink = ({ to, children, icon: Icon, onClick }) => (
   </motion.div>
 );
 
-export default function CitizenNavbar() {
+export default function Navbar() {
   const { isLoggedIn, logout } = useContext(AuthContext);
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,7 +63,6 @@ export default function CitizenNavbar() {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
@@ -73,20 +71,7 @@ export default function CitizenNavbar() {
               CrimeRadar
             </Link>
           </motion.div>
-          {/* Add the new navigation links here */}
-          {/* <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-700 hover:text-blue-600">
-              Features
-            </a>
-            <a href="#works" className="text-gray-700 hover:text-blue-600">
-              How it Works
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-blue-600">
-              Contact
-            </a>
-          </div> */}
-
-          {/* Desktop Navigation */}
+         
           <nav className="hidden md:flex items-center gap-4">
             {isLoggedIn ? (
               <>
@@ -104,7 +89,7 @@ export default function CitizenNavbar() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     logout();
-                    navigate("/"); // Added navigation
+                    navigate("/"); 
                   }}
                   className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors ml-4"
                 >
@@ -139,7 +124,6 @@ export default function CitizenNavbar() {
             )}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -152,7 +136,6 @@ export default function CitizenNavbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.nav
             initial={{ opacity: 0, y: -20 }}
@@ -170,14 +153,14 @@ export default function CitizenNavbar() {
                     Home
                   </NavLink>
                   <NavLink
-                    to="/citizen-cases"
+                    to="/cases"
                     icon={FiAlertCircle}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Cases
                   </NavLink>
                   <NavLink
-                    to="/citizen-register-case"
+                    to="/register-case"
                     icon={FiPlusSquare}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -188,7 +171,7 @@ export default function CitizenNavbar() {
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
-                      navigate("/"); // Added navigation
+                      navigate("/"); 
                     }}
                     className="w-full flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors mt-4"
                   >

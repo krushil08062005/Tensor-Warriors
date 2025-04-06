@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import GoogleTranslate from "../components/GoogleTranslator"
 import {
   FiHome,
   FiAlertCircle,
@@ -18,6 +19,7 @@ import {
 } from "react-icons/fi";
 import { AuthContext } from "../context/AuthContext";
 
+
 const NavLink = ({ to, children, icon: Icon, onClick }) => (
   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
     <Link
@@ -25,6 +27,7 @@ const NavLink = ({ to, children, icon: Icon, onClick }) => (
       onClick={onClick}
       className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors px-4 py-2 rounded-lg"
     >
+
       {Icon && <Icon className="w-5 h-5" />}
       <span>{children}</span>
     </Link>
@@ -64,26 +67,24 @@ export default function AuthNavbar() {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
+
             <Link to="/" className="text-2xl font-bold text-blue-600">
               CrimeRadar
             </Link>
           </motion.div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-4">
             {isLoggedIn ? (
               <>
                 <NavLink to="/" icon={FiHome}>
                   Home
                 </NavLink>
-                <NavLink to="/auth-cases" icon={FiAlertCircle}>
-                  Cases
-                </NavLink>
+               
                 <NavLink to="/auth-register-case" icon={FiPlusSquare}>
                   Report Case
                 </NavLink>
@@ -92,7 +93,7 @@ export default function AuthNavbar() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     logout();
-                    navigate("/"); // Added navigation
+                    navigate("/"); 
                   }}
                   className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors ml-4"
                 >
@@ -127,7 +128,6 @@ export default function AuthNavbar() {
             )}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -140,7 +140,6 @@ export default function AuthNavbar() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.nav
             initial={{ opacity: 0, y: -20 }}
@@ -157,15 +156,9 @@ export default function AuthNavbar() {
                   >
                     Home
                   </NavLink>
+                 
                   <NavLink
-                    to="/auth-cases"
-                    icon={FiAlertCircle}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Cases
-                  </NavLink>
-                  <NavLink
-                    to="/auth-register-case"
+                    to="/register-case"
                     icon={FiPlusSquare}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -176,7 +169,7 @@ export default function AuthNavbar() {
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
-                      navigate("/"); // Added navigation
+                      navigate("/"); 
                     }}
                     className="w-full flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors mt-4"
                   >

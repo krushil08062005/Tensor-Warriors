@@ -80,7 +80,6 @@
 
 // export default IncidentMap;
 
-// Update the IncidentMap component
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -91,17 +90,16 @@ const IncidentMap = () => {
   const [error, setError] = useState(null);
   const [incidents, setIncidents] = useState([]);
 
-  // Get status color mapping
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "resolved":
-        return "#10b981"; // Green
+        return "#10b981"; 
       case "pending":
-        return "#f59e0b"; // Orange
+        return "#f59e0b"; 
       case "under investigation":
-        return "#3b82f6"; // Blue
+        return "#3b82f6"; 
       default:
-        return "#ef4444"; // Red
+        return "#ef4444"; 
     }
   };
 
@@ -157,7 +155,6 @@ const IncidentMap = () => {
           },
         });
 
-        // Add info window
         const infoWindow = new window.google.maps.InfoWindow({
           content: `
             <div class="text-sm">

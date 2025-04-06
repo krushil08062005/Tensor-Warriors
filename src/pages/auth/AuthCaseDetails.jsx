@@ -4,12 +4,9 @@ import { AuthContext } from "../../context/AuthContext";
 import AuthNavbar from "../../components/AuthNavbar";
 import Footer from "../../components/Footer";
 
-// Add this function to update case status properly
 const handleVerify = () => {
   setCaseData((prev) => ({ ...prev, status: "Approved" }));
 
-  // Update the parent state through context or API call
-  // For demo, we'll use localStorage
   const updatedCases = cases.map((c) =>
     c.id === caseData.id ? { ...c, status: "Approved" } : c
   );
@@ -19,12 +16,10 @@ const handleVerify = () => {
 };
 
 const VerifyCaseDetails = () => {
-  // Move all hooks INSIDE the component
   const { caseId } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Initialize state INSIDE the component
   const [cases, setCases] = useState(() => {
     const saved = localStorage.getItem("cases");
     return saved
@@ -56,14 +51,6 @@ const VerifyCaseDetails = () => {
     setCaseData((prev) => ({ ...prev, status: "Approved" }));
     navigate("/pending");
   };
-
-  //   const handleVerify = () => {
-  //     // Update the case status
-  //     setCases((prev) =>
-  //       prev.map((c) => (c.id === caseData.id ? { ...c, status: "Approved" } : c))
-  //     );
-  //     navigate("/cases/pending"); // Redirect back to pending cases
-  //   };
 
   if (!caseData) return <div>Case not found</div>;
 

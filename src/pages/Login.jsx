@@ -15,7 +15,7 @@ export default function Login() {
   const { login } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("public");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // ✅ Fix added here
+  const [errorMessage, setErrorMessage] = useState(""); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -183,7 +183,7 @@ export default function Login() {
       <Navbar />
       <main className="flex-grow p-8 flex items-center justify-center">
         <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl overflow-hidden flex">
-          {/* Left Illustration */}
+          
           <div className="hidden md:block flex-1 bg-gradient-to-br from-blue-600 to-blue-500 p-8">
             <div className="h-full flex flex-col justify-center items-center text-white">
               <img
@@ -201,7 +201,6 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Right Form */}
           <div className="flex-1 p-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

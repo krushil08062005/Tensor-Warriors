@@ -16,7 +16,6 @@ import Footer from "../../components/Footer";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../context/AuthContext";
 
-// IncidentDetailsModal component (moved inside the same file for this example)
 const IncidentDetailsModal = ({ incident, onClose }) => {
   if (!incident) return null;
 
@@ -215,14 +214,12 @@ export default function Cases() {
       const from = (pageNum - 1) * itemsPerPage;
       const to = from + itemsPerPage - 1;
 
-      // Fetch total count of reports
       const { count } = await supabase
         .from('reports')
         .select('*', { count: 'exact', head: true })
 
       setTotalPages(Math.ceil(count / itemsPerPage));
 
-      // Fetch paginated reports data
       const { data, error } = await supabase
         .from('reports')
         .select('*')
@@ -259,7 +256,6 @@ export default function Cases() {
     if (isLoggedIn) {
       fetchCases(page);
       
-      // Setup realtime subscription for reports table
       const reportsSubscription = supabase
         .channel('reports_changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, payload => {

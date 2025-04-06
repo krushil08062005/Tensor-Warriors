@@ -342,7 +342,6 @@ const PendingCases = () => {
   useEffect(() => {
     const fetchPendingCases = async () => {
       try {
-        // First fetch pending cases with reporter information
         const { data: casesData, error: casesError } = await supabase
           .from('reports')
           .select(`*,
@@ -358,7 +357,6 @@ const PendingCases = () => {
 
         if (casesError) throw casesError;
 
-        // Then fetch media for each case
         const casesWithMedia = await Promise.all(
           casesData.map(async (report) => {
             const { data: mediaData, error: mediaError } = await supabase
@@ -510,7 +508,6 @@ const PendingCases = () => {
     }
 
     try {
-      // Get media to delete
       const { data: mediaData, error: mediaError } = await supabase
         .from('report_media')
         .select('file_url')
@@ -518,7 +515,6 @@ const PendingCases = () => {
 
       if (mediaError) throw mediaError;
 
-      // Delete media from storage if exists
       if (mediaData && mediaData.length > 0) {
         const filePaths = mediaData.map(m => m.file_path).filter(Boolean);
         if (filePaths.length > 0) {
@@ -530,7 +526,6 @@ const PendingCases = () => {
         }
       }
 
-      // Delete media records
       const { error: deleteMediaError } = await supabase
         .from('report_media')
         .delete()
@@ -538,7 +533,6 @@ const PendingCases = () => {
 
       if (deleteMediaError) throw deleteMediaError;
 
-      // Delete the report
       const { error } = await supabase
         .from('reports')
         .delete()
@@ -580,7 +574,6 @@ const PendingCases = () => {
     }
   };
 
-  // Mock timeline updates
   const getCaseTimeline = (caseItem) => {
     return [
       {
@@ -684,7 +677,6 @@ const PendingCases = () => {
       </main>
       <Footer />
 
-      {/* Enhanced Case Detail Modal */}
       {selectedCase && (
         <motion.div 
           initial={{ opacity: 0 }}
@@ -784,25 +776,7 @@ const PendingCases = () => {
                     </div>
                   </div>
 
-                  {/* Severity Selector */}
-                  {/* <div className="bg-gray-50 p-4 rounded-lg">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Update Severity Level
-                    </label>
-                    <select
-                      value={selectedCase.severity}
-                      onChange={(e) => {
-                        const newSeverity = e.target.value;
-                        setSelectedCase({...selectedCase, severity: newSeverity});
-                        handleUpdateSeverity(selectedCase.id, newSeverity);
-                      }}
-                      className="w-full p-2 border rounded"
-                    >
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                    </select>
-                  </div> */}
+                 
                 </div>
 
                 <div>
@@ -825,26 +799,11 @@ const PendingCases = () => {
    
 
 
-                  {/* Analysis Results */}
                   
                 </div>
               </div>
 
-              {/* <div className="pt-4 border-t border-gray-200 flex justify-between">
-                <button
-                  onClick={() => handleMarkAsFake(selectedCase.id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  Mark as Fake
-                </button>
-                <button
-                  onClick={() => handleApproveCase(selectedCase.id)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                  disabled={actionLoading}
-                >
-                  {actionLoading ? 'Processing...' : 'Approve Case'}
-                </button>
-              </div> */}
+             
               {selectedCase.report_media.map((media) => {
   if (!media.file_url) {
     console.warn("Missing file URL for media:", media);
@@ -853,16 +812,15 @@ const PendingCases = () => {
 
   return (
     <div key={media.id} className="relative mb-4 group">
-      {/* Fullscreen Button */}
       <button
         onClick={() => {
           const img = document.getElementById(`case-img-${media.id}`);
           if (img.requestFullscreen) {
             img.requestFullscreen();
           } else if (img.webkitRequestFullscreen) {
-            img.webkitRequestFullscreen(); // Safari
+            img.webkitRequestFullscreen(); 
           } else if (img.msRequestFullscreen) {
-            img.msRequestFullscreen(); // IE11
+            img.msRequestFullscreen(); 
           }
         }}
         className="absolute top-2 right-2 z-10 px-2 py-1 text-sm bg-black bg-opacity-60 text-white rounded hover:bg-opacity-80 transition hidden group-hover:block"
@@ -870,7 +828,6 @@ const PendingCases = () => {
         Fullscreen
       </button>
 
-      {/* Image */}
       <img
         id={`case-img-${media.id}`}
         src={media.file_url}

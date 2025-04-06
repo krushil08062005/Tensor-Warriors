@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoadScript } from "@react-google-maps/api";
 import { GOOGLE_MAPS_CONFIG } from "./config/maps";
 import { AuthProvider } from "./context/AuthContext";
-
 import Home from "./pages/Home";
 import CitizenDashboard from "./pages/citizen/CitizenDashboard";
 import AuthDashboard from "./pages/auth/AuthDashboard";
@@ -18,11 +17,14 @@ import TotalCases from "./pages/auth/TotalCases";
 import ResolvedCases from "./pages/auth/ResolvedCases";
 import ApprovedCases from "./pages/auth/ApprovedCases";
 import PendingCases from "./pages/auth/PendingCases";
+import GoogleTranslate from "./components/GoogleTranslator";
 
 function App() {
   return (
     <LoadScript {...GOOGLE_MAPS_CONFIG}>
       <AuthProvider>
+      <GoogleTranslate />
+
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />

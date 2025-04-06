@@ -1,10 +1,8 @@
-// CaseCard.jsx
 import { motion } from "framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const CaseCard = ({ caseItem }) => {
-  // Changed prop name from 'case' to 'caseItem'
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -31,7 +29,7 @@ const CaseCard = ({ caseItem }) => {
           </span>
 
           <Link
-            to={`/case/${caseItem.id}`}
+            to={`/case/${caseItem.id}`}  
             className="mt-4 inline-block text-blue-600 hover:text-blue-700 text-sm"
           >
             View Details →
