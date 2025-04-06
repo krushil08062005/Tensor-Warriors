@@ -267,7 +267,7 @@
 //   const [crimeType, setCrimeType] = useState("");
 //   const [dateTime, setDateTime] = useState("");
 //   const [description, setDescription] = useState("");
-//   const [caseNumber, setCaseNumber] = useState(""); 
+//   const [caseNumber, setCaseNumber] = useState("");
 //   const [submissionStatus, setSubmissionStatus] = useState({
 //     status: null, // null, "success", "error"
 //     message: "",
@@ -338,19 +338,19 @@
 //       mapInstance.addListener("click", (e) => {
 //         const clickedLat = e.latLng.lat();
 //         const clickedLng = e.latLng.lng();
-        
+
 //         // Update marker position
 //         markerInstance.setPosition({
 //           lat: clickedLat,
 //           lng: clickedLng,
 //         });
-        
+
 //         // Update state with new coordinates
 //         setCoordinates({
 //           lat: clickedLat,
 //           lng: clickedLng,
 //         });
-        
+
 //         // Get address from coordinates
 //         reverseGeocode(clickedLat, clickedLng);
 //       });
@@ -360,12 +360,12 @@
 //         const position = markerInstance.getPosition();
 //         const newLat = position.lat();
 //         const newLng = position.lng();
-        
+
 //         setCoordinates({
 //           lat: newLat,
 //           lng: newLng,
 //         });
-        
+
 //         reverseGeocode(newLat, newLng);
 //       });
 
@@ -398,10 +398,10 @@
 //   // Reverse geocode - get address from coordinates
 //   const reverseGeocode = async (lat, lng) => {
 //     if (!window.google) return;
-    
+
 //     const geocoder = new window.google.maps.Geocoder();
 //     const latlng = { lat, lng };
-    
+
 //     geocoder.geocode({ location: latlng }, (results, status) => {
 //       if (status === "OK" && results[0]) {
 //         setAddress(results[0].formatted_address);
@@ -461,7 +461,7 @@
 //             // police_case_number: formData.caseNumber,
 //             severity:'low',
 //             // evidence_url: fileUrl,
-//             status: 'pending', 
+//             status: 'pending',
 //             reported_at: new Date().toISOString(),
 //             updated_at : new Date().toISOString()
 //           },
@@ -469,7 +469,7 @@
 //         .select();
 
 //       if (error) throw error;
-      
+
 //       return { success: true, data };
 //     } catch (error) {
 //       console.error('Error submitting to Supabase:', error);
@@ -481,17 +481,17 @@
 //     e.preventDefault();
 //     setIsSubmitting(true);
 //     setSubmissionStatus({ status: null, message: "" });
-    
+
 //     // Validate required fields
 //     if (!crimeType || !dateTime || !description || !coordinates.lat || !coordinates.lng) {
 //       setIsSubmitting(false);
-//       setSubmissionStatus({ 
-//         status: "error", 
-//         message: "Please fill in all required fields and select a location on the map." 
+//       setSubmissionStatus({
+//         status: "error",
+//         message: "Please fill in all required fields and select a location on the map."
 //       });
 //       return;
 //     }
-    
+
 //     // Collect form data
 //     const formData = {
 //       isAnonymous,
@@ -502,17 +502,17 @@
 //       description,
 //       caseNumber,
 //     };
-    
+
 //     try {
 //       // Submit data to Supabase
 //       const result = await submitToSupabase(formData);
-      
+
 //       if (result.success) {
-//         setSubmissionStatus({ 
-//           status: "success", 
-//           message: "Your incident report has been submitted successfully." 
+//         setSubmissionStatus({
+//           status: "success",
+//           message: "Your incident report has been submitted successfully."
 //         });
-        
+
 //         // Reset form after successful submission
 //         setTimeout(() => {
 //           setCrimeType("");
@@ -523,15 +523,15 @@
 //           // Don't reset location as the user might want to report another incident at the same place
 //         }, 3000);
 //       } else {
-//         setSubmissionStatus({ 
-//           status: "error", 
-//           message: `Failed to submit report: ${result.error}` 
+//         setSubmissionStatus({
+//           status: "error",
+//           message: `Failed to submit report: ${result.error}`
 //         });
 //       }
 //     } catch (error) {
-//       setSubmissionStatus({ 
-//         status: "error", 
-//         message: `An unexpected error occurred: ${error.message}` 
+//       setSubmissionStatus({
+//         status: "error",
+//         message: `An unexpected error occurred: ${error.message}`
 //       });
 //     } finally {
 //       setIsSubmitting(false);
@@ -552,7 +552,7 @@
 //             lat: position.coords.latitude,
 //             lng: position.coords.longitude,
 //           };
-          
+
 //           map.setCenter(userLocation);
 //           marker.setPosition(userLocation);
 //           setCoordinates(userLocation);
@@ -591,8 +591,8 @@
 //               initial={{ opacity: 0, y: -10 }}
 //               animate={{ opacity: 1, y: 0 }}
 //               className={`p-4 mb-6 rounded-lg flex items-center gap-3 ${
-//                 submissionStatus.status === "success" 
-//                   ? "bg-green-100 text-green-800" 
+//                 submissionStatus.status === "success"
+//                   ? "bg-green-100 text-green-800"
 //                   : "bg-red-100 text-red-800"
 //               }`}
 //             >
@@ -714,13 +714,13 @@
 //                       <FiNavigation className="w-5 h-5" />
 //                     </button>
 //                   </div>
-                  
+
 //                   {/* Map Container */}
-//                   <div 
-//                     id="map" 
+//                   <div
+//                     id="map"
 //                     className="w-full h-64 rounded-lg border border-gray-300 overflow-hidden mb-2"
 //                   ></div>
-                  
+
 //                   {/* Coordinates Display */}
 //                   {coordinates.lat && coordinates.lng && (
 //                     <div className="text-sm text-gray-600 flex gap-4">
@@ -905,7 +905,7 @@ export default function RegisterCase() {
         },
         (error) => {
           console.error("Error getting location:", error);
-          setCoordinates({ lat: 40.7128, lng: -74.006 }); 
+          setCoordinates({ lat: 40.7128, lng: -74.006 });
         }
       );
     }
@@ -1264,7 +1264,8 @@ export default function RegisterCase() {
                 Incident Details
               </h2>
 
-              <div className="md:col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Title <span className="text-red-500">*</span>
                   </label>
@@ -1277,7 +1278,6 @@ export default function RegisterCase() {
                     required
                   />
                 </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Crime Type <span className="text-red-500">*</span>
