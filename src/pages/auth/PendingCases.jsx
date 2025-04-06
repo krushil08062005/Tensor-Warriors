@@ -260,25 +260,25 @@ const PendingCases = () => {
     }
   };
 
-  const getCaseTimeline = (caseItem) => {
-    return [
-      {
-        time: new Date(caseItem.reported_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        title: "Report Submitted",
-        description: "The incident was first reported by a user."
-      },
-      {
-        time: new Date(new Date(caseItem.reported_at).getTime() + 30 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        title: "Initial Review",
-        description: "The report was received and queued for review."
-      },
-      {
-        time: "Now",
-        title: "Pending Approval",
-        description: "Awaiting moderator approval to proceed with investigation."
-      }
-    ];
-  };
+  // const getCaseTimeline = (caseItem) => {
+  //   return [
+  //     {
+  //       time: new Date(caseItem.reported_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  //       title: "Report Submitted",
+  //       description: "The incident was first reported by a user."
+  //     },
+  //     {
+  //       time: new Date(new Date(caseItem.reported_at).getTime() + 30 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  //       title: "Initial Review",
+  //       description: "The report was received and queued for review."
+  //     },
+  //     {
+  //       time: "Now",
+  //       title: "Pending Approval",
+  //       description: "Awaiting moderator approval to proceed with investigation."
+  //     }
+  //   ];
+  // };
 
   if (loading) {
     return (
